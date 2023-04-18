@@ -1,0 +1,2 @@
+# upstream is not active
+source: patch-not-forwarded-upstream debian/patches/*

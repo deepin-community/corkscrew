@@ -1,5 +1,187 @@
-template-repository (1.0-1) unstable; urgency=medium
+corkscrew (2.0-14) unstable; urgency=medium
 
-  * Initial release
+  * Update upstream URL and email from github
 
- -- Tsic404 <liuheng@deepin.org>  Sat, 28 Jan 2023 13:46:49 +0800
+ -- Roger Shimizu <rosh@debian.org>  Sun, 22 May 2022 23:36:33 +0900
+
+corkscrew (2.0-13) unstable; urgency=medium
+
+  * debian/patches:
+    - Refresh patches.
+    - Add patch 05 to handle AUTH_FILE option using incorrect line
+      ending in HTTP request (LP: #1697507).
+  * Add lintian-overrides to silence patch-not-forwarded-upstream
+    warning.
+
+ -- Roger Shimizu <rosh@debian.org>  Sun, 27 Dec 2020 22:38:51 +0900
+
+corkscrew (2.0-12) unstable; urgency=medium
+
+  [ Helmut Grohne ]
+  * Fix FTCBFS: Export CC for ./configure. (Closes: #903512)
+
+  [ Roger Shimizu ]
+  * debian/control:
+    - Adopt this package under bridges-team (Closes: #920060).
+    - Move Vcs-* URL to salsa.
+    - Add Rules-Requires-Root: no
+  * debian/copyright:
+    - Use secure copyright file specification URI.
+  * debian/watch:
+    - Update watch file format version to 4.
+
+ -- Roger Shimizu <rosh@debian.org>  Wed, 16 Dec 2020 23:38:03 +0900
+
+corkscrew (2.0-11) unstable; urgency=medium
+
+  * debian/copyright
+    - (Source): Update.
+  * debian/control
+    - (Homepage): Update.
+    - (Standards-Version): Update to 3.9.8.
+    - (Vcs-*): Update to anonscm.debian.org.
+  * debian/patches
+    - (40): Add IPv6 support (Closes: 782751). Patch thanks to
+      Ard van Breemen <ard@kwaak.net>.
+
+ -- Jari Aalto <jari.aalto@cante.net>  Tue, 18 Oct 2016 21:56:28 +0300
+
+corkscrew (2.0-10) unstable; urgency=low
+
+  * debian/compat
+    - Update to 9.
+  * debian/copyright
+    - Update year.
+  * debian/control
+    - (Build-Depends): Update to debhelper 9.
+    - (Standards-Version): Update to 3.9.4.
+  * debian/patches
+    - (30): New. Support spaces in authentication data. Patch thanks to
+      Filip Zyzniewski <filip.zyzniewski@sabre.com> (LP: #962921).
+  * debian/pod2man.mk
+    - Remove sed, use --release option.
+
+ -- Jari Aalto <jari.aalto@cante.net>  Thu, 23 May 2013 21:46:35 +0300
+
+corkscrew (2.0-9) unstable; urgency=low
+
+  * debian/control
+    - (Build-Depends): Rm dpkg-dev; not needed with debhelper 9.
+    - (standards-Version): Update to 3.9.3.1.
+  * debian/copyright
+    - Update to format 1.0.
+  * debian/patches
+    - (20): Refresh. Fix spelling mistake in code.
+  * debian/rules
+    - Enable all hardening flags.
+    - Use DEB_*_MAINT_* variables.
+  * debian/*.mk
+    - Minor updates.
+
+ -- Jari Aalto <jari.aalto@cante.net>  Thu, 22 Mar 2012 15:21:20 -0400
+
+corkscrew (2.0-8) unstable; urgency=low
+
+  * debian/compat
+    - Update to 9
+  * debian/control
+    - (Build-Depends): update to debhelper 9, dpkg-dev 1.16.1.
+  * debian/copyright
+    - Update to DEP5
+  * debian/rules
+    - Use hardened CFLAGS.
+      http://wiki.debian.org/ReleaseGoals/SecurityHardeningBuildFlags
+
+ -- Jari Aalto <jari.aalto@cante.net>  Sat, 11 Feb 2012 15:51:33 -0500
+
+corkscrew (2.0-7) unstable; urgency=medium
+
+  * debian/control:
+    - (Build-Depends): Add autotools-dev for latest config.guess and
+      config.sub files (FTBFS kfreebsd-*; Closes: #572291).
+  * debian/debian-autotools.mk
+    - Add config-prepare macro.
+  * debian/rules
+    - (override_dh_auto_configure): use config-prepare to set up
+      newest config (Closes: #534816).
+    - (install): In make call, move target call 'install' to the end of
+      line.
+    - (MANSECT): remove variable and integrate into 'man' target.
+
+ -- Jari Aalto <jari.aalto@cante.net>  Wed, 03 Mar 2010 16:55:58 +0200
+
+corkscrew (2.0-6) unstable; urgency=low
+
+  * New maintainer (Closes: #569185).
+  * Move to packaging format "3.0 (quilt)".
+  * debian/clean
+    - New file.
+  * debian/compat
+    - New file.
+  * debian/control
+    - (Build-Depends): Update to debhelper 7.1
+    - (Homepage): New.
+    - (Standards-Version): Update to 3.8.4.
+  * debian/copyright
+    - Update layout.
+  * debian/corkscrew.1
+    - Delete raw format manual page; change to POD format.
+  * debian/corkscrew.docs
+    - New file.
+  * debian/corkscrew.manpages
+    - New file.
+  * debian/corkscrew.pod.1
+    - New manual page format. corkscrew.1.
+  * debian/debian-autotools.mk
+    - New file.
+  * debian/pod2man.mk
+    - New file.
+  * debian/patches
+    - Convert direct modifications to standard patches.
+  * debian/rules
+    - Remove rules handled by standard dh(1).
+    - (override_dh_auto_configure): Use newest config.* files.
+  * debian/source/format
+    - New file.
+  * debian/watch
+    - New file.
+
+ -- Jari Aalto <jari.aalto@cante.net>  Wed, 03 Mar 2010 11:13:44 +0200
+
+corkscrew (2.0-5) unstable; urgency=low
+
+  * Updated config.sub/config.guess (thanks Aurelien Jarno)
+    (closes: #317321)
+  * Bumped Standards-Version to 3.6.2
+
+ -- Thomas Seyrat <tomasera@debian.org>  Mon, 25 Jul 2005 11:40:14 +0200
+
+corkscrew (2.0-4) unstable; urgency=low
+
+  * Applied patch by Frank Kirschner to fix issue when first packet
+    sent by proxy has both header and beginning of answer
+  * Included manpage provided by Laurent Fousse (closes: #222038)
+  * Fixed corkscrew path in README (closes: #219953)
+  * debian/rules minor changes
+  * Case adjustment in small description
+  * Bumped Standards-Version to 3.6.1
+
+ -- Thomas Seyrat <tomasera@debian.org>  Sun, 29 Feb 2004 16:52:19 +0100
+
+corkscrew (2.0-3) unstable; urgency=low
+
+  * Bumped Standards-Version to 3.5.7.
+
+ -- Thomas Seyrat <tomasera@debian.org>  Sat, 21 Sep 2002 15:52:22 +0200
+
+corkscrew (2.0-2) unstable; urgency=low
+
+  * Added README to documentation directory.
+
+ -- Thomas Seyrat <tomasera@debian.org>  Fri, 17 May 2002 10:33:12 +0200
+
+corkscrew (2.0-1) unstable; urgency=low
+
+  * Initial Release. (closes: #140343)
+
+ -- Thomas Seyrat <tomasera@debian.org>  Thu, 28 Mar 2002 22:18:30 +0100

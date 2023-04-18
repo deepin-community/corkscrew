@@ -1,0 +1,35 @@
+From: Filip Zyzniewski <filip.zyzniewski@sabre.com>
+Date: Fri, 23 Mar 2012 09:19:42 +0100
+Subject: support spaces in authentication data
+Origin: https://bugs.launchpad.net/ubuntu/+source/corkscrew/+bug/962921
+
+---
+ corkscrew.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
+
+diff --git a/corkscrew.c b/corkscrew.c
+index 99d2cef..9f17f11 100644
+--- a/corkscrew.c
++++ b/corkscrew.c
+@@ -203,9 +203,18 @@ char *argv[];
+ 				exit(-1);
+ 			} else {
+ 				char line[4096];
+-				fscanf(fp, "%s", line);
+-				up = malloc(sizeof(line));
+-				up = line;
++				char *eol = line;
++				int linelen;
++				linelen = fread(line, 1, 4095, fp);
++				if (ferror(fp)) {
++					fprintf(stderr, "Error reading %s: %s\n", argv[5], strerror(errno));
++					exit(-1);
++				}
++				line[linelen] = '\0';
++				eol = strchr(line, '\n');
++				if (eol)
++					*eol = '\0';
++				up = strdup(line);
+ 				fclose(fp);
+ 			}
+ 		}

@@ -1,0 +1,37 @@
+From: Jari Aalto <jari.aalto@cante.net>
+Date: Sun, 28 Feb 2010 18:12:11 +0200
+Subject: [PATCH] Debian change (Thomas Seyrat)
+
+Signed-off-by: Jari Aalto <jari.aalto@cante.net>
+---
+ corkscrew.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/corkscrew.c b/corkscrew.c
+index d81d14e..99d2cef 100644
+--- a/corkscrew.c
++++ b/corkscrew.c
+@@ -176,6 +176,7 @@ char *argv[];
+ #endif
+ 	char *host = NULL, *desthost = NULL, *destport = NULL;
+ 	char *up = NULL;
++	char *tmp = NULL;
+ 	int port, sent, setup, code, csock;
+ 	fd_set rfd, sfd;
+ 	struct timeval tv;
+@@ -259,9 +260,14 @@ char *argv[];
+ 					else {
+ 						if ((strncmp(version,"HTTP/",5) == 0) && (code >= 407)) {
+ 						}
+-						fprintf(stderr, "Proxy could not open connnection to %s: %s\n", desthost, descr);
++						fprintf(stderr, "Proxy could not open connection to %s: %s\n", desthost, descr);
+ 						exit(-1);
+ 					}
++					if (tmp = strstr(buffer,"\r\n\r\n"))
++					{
++					    tmp += 4;
++					    write(1, tmp, strlen(tmp));
++					}
+ 				}
+ 			}
+ 			if (FD_ISSET(csock, &sfd) && (sent == 0)) {
