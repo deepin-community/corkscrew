@@ -1,0 +1,108 @@
+From: Ard van Breemen <ard@kwaak.net>
+Date: Fri, 17 Apr 2015 12:13:57 +0200
+Subject: Add IPv6 support
+Origin: https://bugs.debian.org/782751
+
+---
+ corkscrew.c | 50 ++++++++++++++++++++++++++------------------------
+ 1 file changed, 26 insertions(+), 24 deletions(-)
+
+diff --git a/corkscrew.c b/corkscrew.c
+index 9f17f11..665f652 100644
+--- a/corkscrew.c
++++ b/corkscrew.c
+@@ -27,7 +27,7 @@
+ 
+ char *base64_encodei PARAMS((char *in));
+ void usage PARAMS((void));
+-int sock_connect PARAMS((const char *hname, int port));
++int sock_connect PARAMS((const char *hname, const char *port));
+ int main PARAMS((int argc, char *argv[]));
+ 
+ #define BUFSIZE 4096
+@@ -132,32 +132,34 @@ void usage ()
+ }
+ 
+ #ifdef ANSI_FUNC
+-int sock_connect (const char *hname, int port)
++int sock_connect (const char *hname, const char *port)
+ #else
+ int sock_connect (hname, port)
+ const char *hname;
+-int port;
++const char *port;
+ #endif
+ {
+ 	int fd;
+-	struct sockaddr_in addr;
+-	struct hostent *hent;
+-
+-	fd = socket(AF_INET, SOCK_STREAM, 0);
+-	if (fd == -1)
++	struct addrinfo hints;
++	struct addrinfo *result, *rp;
++	memset(&hints, 0, sizeof(struct addrinfo));
++        hints.ai_family = AF_UNSPEC;
++	hints.ai_socktype = SOCK_STREAM;
++	hints.ai_flags = 0;
++	hints.ai_protocol = 0;
++	if (getaddrinfo(hname, port, &hints, &result)!=0)
+ 		return -1;
+-
+-	hent = gethostbyname(hname);
+-	if (hent == NULL)
+-		addr.sin_addr.s_addr = inet_addr(hname);
+-	else
+-		memcpy(&addr.sin_addr, hent->h_addr, hent->h_length);
+-	addr.sin_family = AF_INET;
+-	addr.sin_port = htons(port);
+-	
+-	if (connect(fd, (struct sockaddr *)&addr, sizeof(addr)))
++	for(rp=result;rp!=NULL;rp=rp->ai_next) {
++		fd=socket(rp->ai_family,rp->ai_socktype,rp->ai_protocol);
++		if(fd == -1)
++			continue;
++		if(connect(fd,rp->ai_addr,rp->ai_addrlen)!=-1)
++			break;
++		close(fd);
++	}
++	freeaddrinfo(result);
++	if(rp==NULL)
+ 		return -1;
+-
+ 	return fd;
+ }
+ 
+@@ -174,27 +176,27 @@ char *argv[];
+ #else
+ 	char uri[BUFSIZE], buffer[BUFSIZE], version[BUFSIZE], descr[BUFSIZE];
+ #endif
+-	char *host = NULL, *desthost = NULL, *destport = NULL;
++	char *host = NULL, *port = NULL, *desthost = NULL, *destport = NULL;
+ 	char *up = NULL;
+ 	char *tmp = NULL;
+-	int port, sent, setup, code, csock;
++	int sent, setup, code, csock;
+ 	fd_set rfd, sfd;
+ 	struct timeval tv;
+ 	ssize_t len;
+ 	FILE *fp;
+ 
+-	port = 80;
++	port = "80";
+ 
+ 	if ((argc == 5) || (argc == 6)) {
+ 		if (argc == 5) {
+ 			host = argv[1];
+-			port = atoi(argv[2]);
++			port = argv[2];
+ 			desthost = argv[3];
+ 			destport = argv[4];
+ 		}
+ 		if ((argc == 6)) {
+ 			host = argv[1];
+-			port = atoi(argv[2]);
++			port = argv[2];
+ 			desthost = argv[3];
+ 			destport = argv[4];
+ 			fp = fopen(argv[5], "r");

@@ -1,0 +1,6 @@
+01-readme-path.patch
+02-corkscrew.c.patch
+03-spaces-in-authentication.patch
+04-ipv6-bug782751.patch
+05-AUTH_FILE-option-uses-incorrect-line-ending-in-HTTP-re.patch
+06-Update-upstream-URL-and-email-from-github.patch

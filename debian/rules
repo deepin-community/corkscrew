@@ -1,4 +1,33 @@
 #!/usr/bin/make -f
 
+PACKAGE = corkscrew
+
+DPKG_EXPORT_BUILDTOOLS=1
+-include /usr/share/dpkg/buildtools.mk
+include debian/pod2man.mk
+include debian/debian-autotools.mk
+
+export DEB_BUILD_MAINT_OPTIONS	= hardening=+all
+export DEB_CFLAGS_MAINT_APPEND	= -Wall -pedantic
+export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
+
+man:
+	$(MAKE) -C debian -f pod2man.mk PACKAGE=$(PACKAGE) \
+	PODCENTER=Networking makeman
+
+override_dh_auto_configure: man
+	$(config-prepare)
+	dh_auto_configure
+
+override_dh_strip:
+	$(config-restore)
+	dh_strip
+
+binary: binary-arch
+
 %:
 	dh $@
+
+.PHONY: man
+
+# End of file
